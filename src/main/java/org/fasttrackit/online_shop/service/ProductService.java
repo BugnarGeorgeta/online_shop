@@ -3,14 +3,15 @@ package org.fasttrackit.online_shop.service;
 import org.fasttrackit.online_shop.domain.Product;
 import org.fasttrackit.online_shop.exception.ResourcesNotFoundException;
 import org.fasttrackit.online_shop.persistance.ProductRepository;
-import org.fasttrackit.online_shop.transfer.SaveProductRequest;
+import org.fasttrackit.online_shop.transfer.product.GetProductsRequest;
+import org.fasttrackit.online_shop.transfer.product.SaveProductRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -49,6 +50,21 @@ public class ProductService {
         // lambda expression
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResourcesNotFoundException("Product " + id + "not found."));
+    }
+
+    public Page<Product> getProducts(GetProductsRequest request, Pageable pageable) {
+        LOGGER.info("Searching products {} ", request);
+
+        if (request != null) {
+            if (request.getPartialName() != null && request.getMinQuantity() != null) {
+                productRepository.findByNameContainingAndQuantityGreaterThanEqual(
+                        request.getPartialName(), request.getMinQuantity(), pageable);
+            } else if (request.getPartialName() != null) {
+                productRepository.findByNameContaining(request.getPartialName(), pageable);
+            }
+        }
+        return productRepository.findAll(pageable);
+
     }
 
     public Product updateProduct(long id, SaveProductRequest request) {

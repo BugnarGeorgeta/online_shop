@@ -3,12 +3,11 @@ package org.fasttrackit.online_shop;
 import org.fasttrackit.online_shop.domain.Product;
 import org.fasttrackit.online_shop.exception.ResourcesNotFoundException;
 import org.fasttrackit.online_shop.service.ProductService;
-import org.fasttrackit.online_shop.transfer.SaveProductRequest;
+import org.fasttrackit.online_shop.transfer.product.SaveProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.TransactionSystemException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
