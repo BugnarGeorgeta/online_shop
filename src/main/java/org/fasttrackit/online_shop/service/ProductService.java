@@ -18,7 +18,7 @@ public class ProductService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
     //IoC
-    public final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository) {
