@@ -3,6 +3,7 @@ package org.fasttrackit.online_shop;
 import org.fasttrackit.online_shop.domain.Product;
 import org.fasttrackit.online_shop.exception.ResourcesNotFoundException;
 import org.fasttrackit.online_shop.service.ProductService;
+import org.fasttrackit.online_shop.steps.ProductTestSteps;
 import org.fasttrackit.online_shop.transfer.product.SaveProductRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,29 +18,16 @@ public class ProductServiceIntegrationTests {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductTestSteps productTestSteps;
 
     @Test
     void createProduct_whenValidRequest_thenProductIsCreated() {
 
-        createProduct();
+        productTestSteps.createProduct();
     }
 
-    private Product createProduct() {
-        SaveProductRequest request = new SaveProductRequest();
-        request.setName("Laptop");
-        request.setPrice(2500.0);
-        request.setQuantity(10);
 
-        Product product = productService.createProduct(request);
-
-        assertThat(product, notNullValue());
-        assertThat(product.getId(), greaterThan(0L));
-        assertThat(product.getName(), is(request.getName()));
-        assertThat(product.getPrice(), is(request.getPrice()));
-        assertThat(product.getQuantity(), is(request.getQuantity()));
-
-        return product;
-    }
 
     @Test
     void createProduct_whenMissingName_thenExceptionThrow() {
@@ -57,7 +45,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     void getProduct_whenExistingProduct_thenReturnProduct() {
-        Product product = createProduct();
+        Product product = productTestSteps.createProduct();
 
         Product response = productService.getProduct(product.getId());
 
@@ -78,7 +66,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     void updateProduct_whenValidRequest_thenReturnUpdatingProduct() {
-        Product product = createProduct();
+        Product product = productTestSteps.createProduct();
 
         SaveProductRequest request = new SaveProductRequest();
         request.setName(product.getName() + "update");
@@ -98,7 +86,7 @@ public class ProductServiceIntegrationTests {
 
     @Test
     void deleteProduct_whenExistingProduct_thenProductDoesNotExist() {
-        Product product = createProduct();
+        Product product = productTestSteps.createProduct();
 
         productService.deleteProduct(product.getId());
 
